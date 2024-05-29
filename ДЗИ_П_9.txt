@@ -1,0 +1,225 @@
+/////////////1
+using System;
+using System.Linq.Expressions;
+
+namespace Calculator
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int firstNumber;
+            string operation;
+            int secondNumber;
+            int result = 0;
+
+            Console.WriteLine("This program makes operation, choosed by the user, with two number that the user will put.");
+            Console.Write("Enter the first number: ");
+            firstNumber = int.Parse(Console.ReadLine());
+
+            Console.Write("Enter the mathemathic operator – '+', '-', '*', '/', '%': ");
+            operation = Console.ReadLine();
+
+            while (operation != "+" && operation != "-" && operation != "*" && operation != "/" && operation != "%")
+            {
+                Console.Write("Enter a valid operator!: ");
+                operation = Console.ReadLine();
+            }
+
+            Console.Write("Enter the second number: ");
+            secondNumber = int.Parse(Console.ReadLine());
+
+            switch (operation)
+            {
+                case "+":
+                    result = firstNumber + secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} + {secondNumber} = {result} and the result is even.");
+                    } 
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} + {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "-":
+                    result = firstNumber - secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} - {secondNumber} = {result} and the result is even.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} - {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "*":
+                    result = firstNumber * secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} * {secondNumber} = {result} and the result is even.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} * {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "/":
+                    if(secondNumber != 0)
+                    {
+                        result = firstNumber / secondNumber;
+                        Console.WriteLine($"{firstNumber} / {secondNumber} = {result}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Division by zero!");
+                    }                   
+                    break;
+
+                case "%":
+                    if (secondNumber != 0)
+                    {
+                        result = firstNumber % secondNumber;
+                        Console.WriteLine($"{firstNumber} % {secondNumber} = remainder {result}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Division by zero!");
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+/////////////////////////////////втори начин
+using System;
+using System.Linq.Expressions;
+
+namespace Calculator
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int firstNumber;
+            string operation;
+            int secondNumber;
+            int result = 0;
+
+            Console.WriteLine("This program makes operation, choosed by the user, with two number that the user will put.");
+            Console.Write("Enter the first number: ");
+            firstNumber = int.Parse(Console.ReadLine());
+
+            Console.Write("Enter the mathemathic operator – '+', '-', '*', '/', '%': ");
+            operation = Console.ReadLine();
+
+            while (operation != "+" && operation != "-" && operation != "*" && operation != "/" && operation != "%")
+            {
+                Console.Write("Enter a valid operator!: ");
+                operation = Console.ReadLine();
+            }
+
+            Console.Write("Enter the second number: ");
+            secondNumber = int.Parse(Console.ReadLine());
+
+            if (operation == "/" || operation == "%") 
+            {
+                while (secondNumber == 0)
+                {
+                    Console.Write("Division by zero! Enter other valid number for division: ");
+                    secondNumber = int.Parse(Console.ReadLine());
+                }
+            }
+
+            switch (operation)
+            {
+                case "+":
+                    result = firstNumber + secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} + {secondNumber} = {result} and the result is even.");
+                    } 
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} + {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "-":
+                    result = firstNumber - secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} - {secondNumber} = {result} and the result is even.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} - {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "*":
+                    result = firstNumber * secondNumber;
+                    if (result % 2 == 0)
+                    {
+                        Console.WriteLine($"{firstNumber} * {secondNumber} = {result} and the result is even.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{firstNumber} * {secondNumber} = {result} and the result is odd.");
+                    }
+                    break;
+
+                case "/":                   
+                    result = firstNumber / secondNumber;
+                    Console.WriteLine($"{firstNumber} / {secondNumber} = {result}");
+                                     
+                    break;
+
+                case "%":                   
+                    result = firstNumber % secondNumber;
+                    Console.WriteLine($"{firstNumber} % {secondNumber} = remainder {result}");   
+                    
+                    break;
+            }
+        }
+    }
+}
+
+
+
+/////////////////////////////////2
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int guests = int.Parse(Console.ReadLine());
+        double budget = double.Parse(Console.ReadLine());
+
+        double easterbread = Math.Ceiling(guests / 3.0);
+        int eggs = guests * 2;
+
+        double easterbreadprice = easterbread * 4;
+        double eggsprice = eggs * 0.45;
+
+        double totalPrice = easterbreadprice + eggsprice;
+
+        if (totalPrice <= budget)
+        {
+            double moneyLeft = budget - totalPrice;
+            Console.WriteLine($"Lyubo bought {easterbread} Easter bread and {eggs} eggs.");
+            Console.WriteLine($"He has {moneyLeft:F2} lv. left.");
+        }
+        else
+        {
+            double moneyNeed = totalPrice - budget;
+            Console.WriteLine("Lyubo doesn't have enough money.");
+            Console.WriteLine($"He needs {moneyNeed:F2} lv. more.");
+        }
+    }
+}

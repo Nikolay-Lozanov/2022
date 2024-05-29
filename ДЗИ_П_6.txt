@@ -1,0 +1,224 @@
+--||
+--1
+CREATE DATABASE CarDealershipDB;
+GO
+
+USE CarDealershipDB;
+GO
+
+--2, 4
+CREATE TABLE Vendor (
+    VendorID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Name NVARCHAR(100) NOT NULL,
+    Address NVARCHAR(150) NOT NULL,
+	City NVARCHAR(30) NOT NULL,
+    Phone VARCHAR(20) NOT NULL
+);
+GO
+
+CREATE TABLE Delivery (
+    DeliveryID INT PRIMARY KEY IDENTITY(1,1),
+    VendorID INT FOREIGN KEY REFERENCES Vendor(VendorID) NOT NULL,
+    DeliveryDate DATE NOT NULL,
+    Quantity SMALLINT NOT NULL
+);
+GO
+
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    FirstName NVARCHAR(30) NOT NULL,
+    LastName NVARCHAR(30) NOT NULL,
+    Position NVARCHAR(50) NOT NULL,
+    DateHired DATE NOT NULL
+);
+GO
+
+CREATE TABLE Automobile (
+    AutomobileID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Make NVARCHAR(50) NOT NULL,
+    Model NVARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    PriceBGN DECIMAL(18,2) NOT NULL,
+    VendorID INT FOREIGN KEY REFERENCES Vendor(VendorID) NOT NULL
+);
+GO
+
+CREATE TABLE Client (
+    ClientID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Address NVARCHAR(150) NOT NULL,
+    Phone VARCHAR(20) NOT NULL
+);
+GO
+
+CREATE TABLE Purchase (
+    PurchaseID INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    AutomobileID INT FOREIGN KEY REFERENCES Automobile(AutomobileID) NOT NULL,
+    ClientID INT FOREIGN KEY REFERENCES Client(ClientID) NOT NULL,
+    EmployeeID INT FOREIGN KEY REFERENCES Employee(EmployeeID) NOT NULL,
+    PurchaseDate DATE NOT NULL,
+    PriceBGN DECIMAL(18,2) NOT NULL
+);
+GO
+
+--|||
+--1
+SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'dbo';
+
+--2
+INSERT INTO Vendor (Name, Address, City, Phone)
+VALUES 
+('Ivan Ivanov Motors', 'ul. Lozenets 5', 'Sofia', '123-456-7890'),
+('Georgi Georgiev Autos', 'bul. Vitosha 10', 'Plovdiv', '987-654-3210'),
+('Maria Marinova Dealership', 'ul. Tsar Osvoboditel 15', 'Varna', '567-890-1234'),
+('Nikolay Nikolov Cars', 'ul. Macedonia 20', 'Burgas', '234-567-8901'),
+('Petar Petrov Auto', 'ul. Lyulin 50', 'Ruse', '678-901-2345');
+
+-- Inserting data into the Delivery table
+INSERT INTO Delivery (VendorID, DeliveryDate, Quantity)
+VALUES 
+(1, '2024-05-06', 12),
+(2, '2024-05-07', 18),
+(3, '2024-05-08', 10),
+(4, '2024-05-09', 15),
+(5, '2024-05-10', 20),
+(1, '2024-05-11', 14),
+(2, '2024-05-12', 16),
+(3, '2024-05-13', 9),
+(4, '2024-05-14', 17),
+(5, '2024-05-15', 22),
+(1, '2024-05-16', 11),
+(2, '2024-05-17', 19),
+(3, '2024-05-18', 8),
+(4, '2024-05-19', 13),
+(5, '2024-05-20', 21);
+
+-- Inserting data into the Employee table
+INSERT INTO Employee (FirstName, LastName, Position, DateHired)
+VALUES 
+('Ivan', 'Ivanov', 'Sales Manager', '2010-01-15'),
+('Georgi', 'Georgiev', 'Sales Associate', '2012-03-10'),
+('Maria', 'Marinova', 'Finance Manager', '2008-05-22'),
+('Nikolay', 'Nikolov', 'Service Technician', '2015-06-12'),
+('Petar', 'Petrov', 'Parts Specialist', '2013-07-19'),
+('Elena', 'Ivanova', 'Accountant', '2016-08-25'),
+('Stoyan', 'Georgiev', 'Marketing Specialist', '2014-09-30'),
+('Anna', 'Petrova', 'Customer Service Representative', '2011-11-11'),
+('Dimitar', 'Stoyanov', 'Inventory Manager', '2009-02-14'),
+('Svetlana', 'Dimitrova', 'Human Resources Coordinator', '2017-10-05');
+
+-- Inserting data into the Automobile table
+INSERT INTO Automobile (Make, Model, Year, PriceBGN, VendorID)
+VALUES 
+('Toyota', 'Camry', 2022, 25000.00, 1),
+('Honda', 'Accord', 2021, 27000.00, 2),
+('Ford', 'F-150', 2023, 35000.00, 3),
+('Chevrolet', 'Malibu', 2022, 28000.00, 4),
+('BMW', 'X5', 2023, 50000.00, 5),
+('Mercedes-Benz', 'E-Class', 2022, 45000.00, 1),
+('Audi', 'A4', 2021, 40000.00, 2),
+('Volkswagen', 'Jetta', 2023, 30000.00, 3),
+('Volvo', 'XC90', 2022, 48000.00, 4),
+('Lexus', 'RX', 2023, 55000.00, 5);
+
+-- Inserting data into the Client table
+INSERT INTO Client (FirstName, LastName, Address, Phone)
+VALUES 
+('Ivan', 'Petrov', 'ul. Park 12', '123-456-7890'),
+('Georgi', 'Stoyanov', 'ul. Gorna 23', '987-654-3210'),
+('Maria', 'Dimitrova', 'ul. Dolna 34', '567-890-1234'),
+('Nikolay', 'Georgiev', 'ul. Lateralna 45', '234-567-8901'),
+('Petar', 'Ivanov', 'ul. Stranska 56', '678-901-2345'),
+('Elena', 'Georgieva', 'ul. Centralna 67', '123-456-7890'),
+('Stoyan', 'Petrov', 'ul. Gradska 78', '987-654-3210'),
+('Anna', 'Ivanova', 'ul. Ploshtad 89', '567-890-1234'),
+('Dimitar', 'Georgiev', 'ul. Cenralen Park 90', '234-567-8901'),
+('Svetlana', 'Petrova', 'ul. Bulevardna 101', '678-901-2345'),
+('Ivanka', 'Nikolova', 'ul. Osvoboditel 112', '123-456-7890'),
+('Dimitar', 'Ivanov', 'ul. Hristo Botev 123', '987-654-3210'),
+('Svetla', 'Pavlova', 'ul. Asenovgradska 234', '567-890-1234'),
+('Boris', 'Borisov', 'ul. Blagoevgradska 345', '234-567-8901'),
+('Silviya', 'Koleva', 'ul. Veliko Tarnovska 456', '678-901-2345'),
+('Emil', 'Emilov', 'ul. Vidin 567', '123-456-7890'),
+('Milena', 'Stoyanova', 'ul. Haskovo 678', '987-654-3210'),
+('Ivo', 'Ivov', 'ul. Kardzhali 789', '567-890-1234'),
+('Kamelia', 'Kostadinova', 'ul. Kyustendil 890', '234-567-8901'),
+('Plamen', 'Plamenov', 'ul. Lovech 901', '678-901-2345');
+
+INSERT INTO Purchase (AutomobileID, ClientID, EmployeeID, PurchaseDate, PriceBGN)
+VALUES 
+(2, 1, 1, '2024-05-06', 27000.00),
+(3, 2, 2, '2024-05-07', 35000.00),
+(4, 3, 3, '2024-05-08', 28000.00),
+(5, 4, 4, '2024-05-09', 50000.00),
+(6, 5, 5, '2024-05-10', 45000.00),
+(7, 6, 6, '2024-05-11', 40000.00),
+(8, 7, 7, '2024-05-12', 30000.00),
+(9, 8, 8, '2024-05-13', 48000.00),
+(10, 9, 9, '2024-05-14', 55000.00),
+(1, 10, 10, '2024-05-15', 25000.00),
+(2, 11, 1, '2024-05-16', 27000.00),
+(3, 12, 2, '2024-05-17', 35000.00),
+(4, 13, 3, '2024-05-18', 28000.00),
+(5, 14, 4, '2024-05-19', 50000.00),
+(6, 15, 5, '2024-05-20', 45000.00),
+(7, 16, 6, '2024-05-21', 40000.00),
+(8, 17, 7, '2024-06-01', 30000.00),
+(9, 18, 8, '2024-06-02', 48000.00),
+(10, 19, 9, '2024-06-03', 55000.00),
+(1, 20, 10, '2024-06-04', 25000.00),
+(2, 1, 1, '2024-06-05', 27000.00),
+(3, 2, 2, '2024-06-06', 35000.00),
+(4, 3, 3, '2024-06-07', 28000.00),
+(5, 4, 4, '2024-06-08', 50000.00),
+(6, 5, 5, '2024-06-09', 45000.00),
+(7, 6, 6, '2024-06-10', 40000.00),
+(8, 7, 7, '2024-06-11', 30000.00),
+(9, 8, 8, '2024-06-12', 48000.00),
+(10, 9, 9, '2024-06-13', 55000.00);
+
+
+--IV
+--1.1
+SELECT Make, COUNT(AutomobileID) AS NumberOfAutomobiles
+FROM Automobile
+WHERE Make = 'Toyota'
+GROUP BY Make;
+
+--1.2
+SELECT City, COUNT(VendorID) AS NumberOfVendors
+FROM Vendor
+WHERE City = 'Sofia'
+GROUP BY City;
+
+--1.3
+SELECT TOP 1 Automobile.Make, COUNT(Purchase.PurchaseID) AS TotalSales
+FROM Purchase
+JOIN Automobile ON Purchase.AutomobileID = Automobile.AutomobileID
+WHERE PurchaseDate BETWEEN '2024-05-06' AND '2024-06-13'
+GROUP BY Automobile.Make
+ORDER BY TotalSales DESC;
+
+--1.4
+SELECT TOP 1 Client.FirstName, Client.LastName, SUM(Purchase.PriceBGN) AS TotalPurchaseAmount
+FROM Purchase
+JOIN Client ON Purchase.ClientID = Client.ClientID
+WHERE PurchaseDate BETWEEN '2024-05-06' AND '2024-06-13'
+GROUP BY Client.FirstName, Client.LastName
+ORDER BY TotalPurchaseAmount DESC;
+
+--1.5
+SELECT 
+    Automobile.Make, 
+    Automobile.Model, 
+    Automobile.Year, 
+    Automobile.PriceBGN,
+    Vendor.Name AS VendorName,
+    Vendor.Address AS VendorAddress
+FROM 
+    Automobile
+LEFT JOIN 
+    Vendor ON Automobile.VendorID = Vendor.VendorID;

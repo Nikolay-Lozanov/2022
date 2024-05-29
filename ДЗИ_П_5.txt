@@ -1,0 +1,218 @@
+--||
+--1
+CREATE DATABASE LibraryDB;
+GO
+
+USE LibraryDB;
+GO
+
+--2, 4
+CREATE TABLE PublishingHouse (
+    PublishingHouseID SMALLINT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(70) NOT NULL,
+    Address NVARCHAR(150) NOT NULL,
+    Phone NVARCHAR(20) NOT NULL
+);
+GO
+
+CREATE TABLE Author (
+    AuthorID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(30) NOT NULL,
+    LastName NVARCHAR(30) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    Nationality VARCHAR(30) NOT NULL
+);
+GO
+
+CREATE TABLE Book (
+    BookID INT PRIMARY KEY IDENTITY(1,1),
+    Title NVARCHAR(150) NOT NULL,
+    ISBN NVARCHAR(20) UNIQUE NOT NULL,
+    PublishedYear INT NOT NULL,
+    Genre VARCHAR(50) NOT NULL,
+    PublishingHouseID SMALLINT FOREIGN KEY REFERENCES PublishingHouse(PublishingHouseID) NOT NULL
+);
+GO
+
+CREATE TABLE BookAuthor (
+    BookID INT FOREIGN KEY REFERENCES Book(BookID) NOT NULL,
+    AuthorID INT FOREIGN KEY REFERENCES Author(AuthorID) NOT NULL,
+    PRIMARY KEY (BookID, AuthorID)
+);
+GO
+
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(30) NOT NULL,
+    LastName NVARCHAR(30) NOT NULL,
+    Position VARCHAR(30) NOT NULL,
+    DateHired DATE NOT NULL
+);
+GO
+
+CREATE TABLE Reader (
+    ReaderID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Profession VARCHAR(50) NOT NULL,
+);
+GO
+
+CREATE TABLE Borrowing (
+    BorrowingID INT PRIMARY KEY IDENTITY(1,1),
+    BookID INT FOREIGN KEY REFERENCES Book(BookID) NOT NULL,
+    ReaderID INT FOREIGN KEY REFERENCES Reader(ReaderID) NOT NULL,
+    EmployeeID INT FOREIGN KEY REFERENCES Employee(EmployeeID) NOT NULL,
+    BorrowDate DATE NOT NULL,
+    ReturnDate DATE NOT NULL
+);
+GO
+
+--|||
+--1
+SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'dbo';
+
+--2
+INSERT INTO PublishingHouse (Name, Address, Phone)
+VALUES 
+('Znam i Moga', 'Sofia, ul. Tsar Osvoboditel 15', '0898123456'),
+('Hemus', 'Plovdiv, ul. Knyaz Boris 7', '0898234567'),
+('Pensoft', 'Varna, ul. Slivnitsa 12', '0898345678'),
+('Tafelberg', 'Burgas, ul. Vasil Levski 25', '0898456789'),
+('Helikon', 'Ruse, ul. Aleksandrovska 30', '0898567890');
+GO
+
+INSERT INTO Author (FirstName, LastName, DateOfBirth, Nationality)
+VALUES 
+('Ivan', 'Vazov', '1850-06-27', 'Bulgarian'),
+('Hristo', 'Botev', '1848-12-25', 'Bulgarian'),
+('Nikola', 'Vapcarov', '1909-12-07', 'Bulgarian'),
+('Hristo', 'Smirnenski', '1898-09-17', 'Bulgarian'),
+('Dimcho', 'Debelyanov', '1887-03-28', 'Bulgarian'),
+('Elin', 'Pelin', '1877-07-18', 'Bulgarian'),
+('Jordan', 'Jovkov', '1880-11-09', 'Bulgarian'),
+('Atanas', 'Dalchev', '1904-06-12', 'Bulgarian'),
+('Pencho', 'Slaveikov', '1866-04-27', 'Bulgarian'),
+('Peyo', 'Yavorov', '1878-01-01', 'Bulgarian');
+GO
+
+INSERT INTO Book (Title, ISBN, PublishedYear, Genre, PublishingHouseID)
+VALUES 
+('Pod Igoto', '978-619-188-040-2', 1894, 'Novel', 1),
+('Borba', '978-954-09-0547-2', 1875, 'Poem', 2),
+('Istoria', '978-954-09-0893-7', 1940, 'Poem', 3),
+('Prikazka za stulbata', '978-954-09-0893-8', 1920, 'Narrative', 4),
+('Az iskam da te pomnq vse taka', '978-954-09-0893-9', 1920, 'Elegy', 5),
+('Andreshko', '978-954-09-0900-1', 1911, 'Narrative', 1),
+('Pesenta na koleletata', '978-954-09-0900-2', 1927, 'Narrative', 2),
+('Molitva', '978-954-09-0900-3', 1939, 'Poem', 3),
+('Spi ezeroto', '978-954-09-0900-4', 1910, 'Poem', 4),
+('Gradushka', '978-954-09-0900-5', 1910, 'Poem', 5);
+GO
+
+INSERT INTO BookAuthor (BookID, AuthorID)
+VALUES 
+(1, 1), -- Pod Igoto by Ivan Vazov
+(2, 2), -- Borba by Hristo Botev
+(3, 3), -- Istoria by Nikola Vapcarov
+(4, 4), -- Prikazka za stulbata by Hristo Smirnenski
+(5, 5), -- Az iskam da te pomnq vse taka by Dimcho Debelyanov
+(6, 6), -- Andreshko by Elin Pelin
+(7, 7), -- Pesenta na koleletata by Jordan Jovkov
+(8, 8), -- Molitva by Atanas Dalchev
+(9, 9), -- Spi ezeroto by Pencho Slaveikov
+(10, 10); -- Gradushka by Peyo Yavorov
+GO
+
+INSERT INTO Employee (FirstName, LastName, Position, DateHired)
+VALUES 
+('Ivan', 'Petkov', 'Librarian', '2010-01-15'),
+('Georgi', 'Dimitrov', 'Manager', '2008-05-22'),
+('Petya', 'Ivanova', 'Assistant Librarian', '2012-03-10'),
+('Maria', 'Georgieva', 'Archivist', '2011-11-01'),
+('Kiril', 'Popov', 'Technician', '2013-07-19'),
+('Dimitar', 'Nikolov', 'Security', '2014-09-05'),
+('Radoslav', 'Kostov', 'Accountant', '2009-02-23'),
+('Elena', 'Stefanova', 'Janitor', '2015-06-12'),
+('Nikolay', 'Petrov', 'Librarian', '2010-01-15'),
+('Todor', 'Vasilev', 'Manager', '2008-05-22');
+GO
+
+INSERT INTO Reader (FirstName, LastName, Email, Phone, Profession)
+VALUES 
+('Stoyan', 'Angelov', 'stoyan.angelov@example.com', '0888123456', 'Teacher'),
+('Petar', 'Todorov', 'petar.todorov@example.com', '0888234567', 'Engineer'),
+('Ivanka', 'Koleva', 'ivanka.koleva@example.com', '0888345678', 'Doctor'),
+('Desislava', 'Ivanova', 'desislava.ivanova@example.com', '0888456789', 'Lawyer'),
+('Mihail', 'Hristov', 'mihail.hristov@example.com', '0888567890', 'Programmer'),
+('Radoslava', 'Petrova', 'radoslava.petrova@example.com', '0888678901', 'Artist'),
+('Teodor', 'Dimitrov', 'teodor.dimitrov@example.com', '0888789012', 'Nurse'),
+('Katerina', 'Nikolova', 'katerina.nikolova@example.com', '0888890123', 'Accountant'),
+('Stanislav', 'Vasilev', 'stanislav.vasilev@example.com', '0888901234', 'Salesperson'),
+('Antonia', 'Ilieva', 'antonia.ilieva@example.com', '0888012345', 'Student'),
+('Viktor', 'Georgiev', 'viktor.georgiev@example.com', '0888123456', 'Journalist'),
+('Nikolay', 'Mihaylov', 'nikolay.mihaylov@example.com', '0888234567', 'Chef'),
+('Mariya', 'Popova', 'mariya.popova@example.com', '0888345678', 'Pilot');
+GO
+
+INSERT INTO Borrowing (BookID, ReaderID, EmployeeID, BorrowDate, ReturnDate)
+VALUES 
+(1, 1, 1, '2024-01-01', '2024-01-15'),
+(2, 2, 2, '2024-01-02', '2024-01-16'),
+(3, 3, 3, '2024-01-03', '2024-01-17'),
+(4, 4, 4, '2024-01-04', '2024-01-18'),
+(5, 5, 5, '2024-01-05', '2024-01-19'),
+(6, 6, 6, '2024-01-06', '2024-01-20'),
+(7, 7, 7, '2024-01-07', '2024-01-21'),
+(8, 8, 8, '2024-01-08', '2024-01-22'),
+(9, 9, 9, '2024-01-09', '2024-01-23'),
+(10, 10, 10, '2024-01-10', '2024-01-24'),
+(1, 1, 1, '2024-01-11', '2024-01-25'),
+(2, 2, 2, '2024-01-12', '2024-01-26'),
+(3, 3, 3, '2024-01-13', '2024-01-27'),
+(4, 4, 4, '2024-01-14', '2024-01-28'),
+(5, 5, 5, '2024-01-15', '2024-01-29'),
+(6, 6, 6, '2024-01-16', '2024-01-30'),
+(7, 7, 7, '2024-01-17', '2024-01-31'),
+(8, 8, 8, '2024-01-18', '2024-02-01'),
+(9, 9, 9, '2024-01-19', '2024-02-02'),
+(10, 10, 10, '2024-01-20', '2024-02-03');
+GO
+
+--IV
+--1.1
+SELECT ph.Name AS PublishingHouseName, COUNT(b.BookID) AS NumberOfBooks
+FROM PublishingHouse ph
+JOIN Book b ON ph.PublishingHouseID = b.PublishingHouseID
+WHERE ph.Name = 'Znam i moga'
+GROUP BY ph.Name;
+
+--1.2
+SELECT COUNT(*) AS NumberOfReaders
+FROM Reader
+WHERE Profession = 'Pilot';
+
+--1.3
+SELECT TOP 1 B.BookID, COUNT(*) AS NumberOfBorrowings, B.Title
+FROM Borrowing AS BR
+INNER JOIN Book AS B ON BR.BookID = B.BookID
+WHERE BR.BorrowDate BETWEEN '2024-01-01' AND '2024-01-20'
+GROUP BY B.BookID, B.Title
+ORDER BY NumberOfBorrowings DESC;
+
+--1.4
+SELECT TOP 1 ReaderID, COUNT(*) AS NumberOfBooksBorrowed
+FROM Borrowing
+WHERE BorrowDate >= '2024-01-01' AND BorrowDate < '2025-01-01'
+GROUP BY ReaderID
+ORDER BY NumberOfBooksBorrowed DESC;
+
+--1.5
+SELECT b.Title AS BookTitle, r.FirstName AS ReaderFirstName, r.LastName AS ReaderLastName, bor.BorrowDate
+FROM Borrowing bor
+INNER JOIN Book b ON bor.BookID = b.BookID
+INNER JOIN Reader r ON bor.ReaderID = r.ReaderID;

@@ -1,0 +1,231 @@
+--||
+--1
+CREATE DATABASE SportingGoodsWarehouse;
+GO
+
+USE SportingGoodsWarehouse;
+GO
+
+--2, 4
+CREATE TABLE Vendor (
+    VendorID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Address NVARCHAR(150) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    Phone VARCHAR(20) NOT NULL
+);
+GO
+
+CREATE TABLE Commodity (
+    CommodityID INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Category NVARCHAR(50) NOT NULL,
+    Brand NVARCHAR(100) NOT NULL,
+    PriceBGN DECIMAL(18,2) NOT NULL,
+    VendorID INT FOREIGN KEY REFERENCES Vendor(VendorID) NOT NULL
+);
+GO
+
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(30) NOT NULL,
+    LastName NVARCHAR(30) NOT NULL,
+    Position NVARCHAR(50) NOT NULL,
+    DateHired DATE NOT NULL
+);
+GO
+
+CREATE TABLE Purchaser (
+    PurchaserID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Address NVARCHAR(150) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    Phone VARCHAR(20) NOT NULL
+);
+GO
+
+CREATE TABLE Purchase (
+    PurchaseID INT PRIMARY KEY IDENTITY(1,1),
+    PurchaserID INT FOREIGN KEY REFERENCES Purchaser(PurchaserID) NOT NULL,
+    EmployeeID INT FOREIGN KEY REFERENCES Employee(EmployeeID) NOT NULL,
+    PurchaseDate DATE NOT NULL
+);
+GO
+
+CREATE TABLE PurchaseCommodity (
+    PurchaseCommodityID INT PRIMARY KEY IDENTITY(1,1),
+    PurchaseID INT FOREIGN KEY REFERENCES Purchase(PurchaseID) NOT NULL,
+    CommodityID INT FOREIGN KEY REFERENCES Commodity(CommodityID) NOT NULL,
+    Quantity INT NOT NULL
+);
+GO
+
+CREATE TABLE Delivery (
+    DeliveryID INT PRIMARY KEY IDENTITY(1,1),
+    VendorID INT FOREIGN KEY REFERENCES Vendor(VendorID) NOT NULL,
+    DeliveryDate DATE NOT NULL
+);
+GO
+
+CREATE TABLE DeliveryCommodity (
+    DeliveryCommodityID INT PRIMARY KEY IDENTITY(1,1),
+    DeliveryID INT FOREIGN KEY REFERENCES Delivery(DeliveryID) NOT NULL,
+    CommodityID INT FOREIGN KEY REFERENCES Commodity(CommodityID) NOT NULL,
+    Quantity INT NOT NULL
+);
+GO
+
+--|||
+--1
+SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'dbo';
+
+--2
+INSERT INTO Vendor (Name, Address, City, Phone)
+VALUES 
+('Sporting Goods Co.', '1234 Elm Street', 'Sofia', '0888123456'),
+('Outdoor Gear Inc.', '5678 Oak Avenue', 'Plovdiv', '0888234567'),
+('Fitness Equipments Ltd.', '91011 Pine Road', 'Varna', '0888345678'),
+('Athletic Supplies LLC', '121314 Birch Lane', 'Burgas', '0888456789'),
+('Sportswear Wholesale', '151617 Cedar Drive', 'Ruse', '0888567890');
+GO
+
+INSERT INTO Commodity (Name, Category, Brand, PriceBGN, VendorID)
+VALUES 
+('Soccer Ball', 'Sports', 'Nike', 25.00, 1),
+('Basketball', 'Sports', 'Adidas', 30.00, 2),
+('Tennis Racket', 'Equipment', 'Wilson', 75.00, 3),
+('Running Shoes', 'Footwear', 'Nike', 50.00, 4),
+('Yoga Mat', 'Fitness', 'Puma', 20.00, 5),
+('Baseball Bat', 'Sports', 'Rawlings', 40.00, 1),
+('Golf Club', 'Sports', 'Titleist', 120.00, 2),
+('Swimming Goggles', 'Fitness', 'Speedo', 15.00, 3),
+('Hiking Boots', 'Footwear', 'Merrell', 60.00, 4),
+('Cycling Helmet', 'Sports', 'Bell', 45.00, 5);
+GO
+
+INSERT INTO Employee (FirstName, LastName, Position, DateHired)
+VALUES 
+('Ivan', 'Petrov', 'Sales Associate', '2018-05-22'),
+('Maria', 'Ivanova', 'Store Manager', '2015-03-14'),
+('Georgi', 'Georgiev', 'Warehouse Manager', '2017-11-05'),
+('Elena', 'Dimitrova', 'Cashier', '2020-07-19'),
+('Nikolay', 'Petrov', 'Logistics Coordinator', '2019-01-10'),
+('Dimitar', 'Kolev', 'Sales Associate', '2018-05-22'),
+('Petya', 'Stoyanova', 'Store Manager', '2015-03-14'),
+('Hristo', 'Angelov', 'Warehouse Manager', '2017-11-05'),
+('Radoslava', 'Georgieva', 'Cashier', '2020-07-19'),
+('Teodora', 'Mihaylova', 'Logistics Coordinator', '2019-01-10');
+GO
+
+INSERT INTO Purchaser (FirstName, LastName, Address, City, Phone)
+VALUES 
+('Stoyan', 'Angelov', '45 Freedom Street', 'Sofia', '0888123456'),
+('Petar', 'Todorov', '67 Independence Avenue', 'Plovdiv', '0888234567'),
+('Ivanka', 'Koleva', '89 Liberty Lane', 'Varna', '0888345678'),
+('Desislava', 'Ivanova', '12 Democracy Blvd', 'Burgas', '0888456789'),
+('Mihail', 'Hristov', '34 Constitution Circle', 'Ruse', '0888567890'),
+('Radoslav', 'Petrov', '45 Freedom Street', 'Sofia', '0888123456'),
+('Katerina', 'Georgieva', '67 Independence Avenue', 'Plovdiv', '0888234567'),
+('Nikolay', 'Dimitrov', '89 Liberty Lane', 'Varna', '0888345678'),
+('Elena', 'Koleva', '12 Democracy Blvd', 'Burgas', '0888456789'),
+('Georgi', 'Hristov', '34 Constitution Circle', 'Ruse', '0888567890');
+GO
+
+INSERT INTO Purchase (PurchaserID, EmployeeID, PurchaseDate)
+VALUES 
+(1, 1, '2024-02-01'),
+(2, 2, '2024-02-02'),
+(3, 3, '2024-02-03'),
+(4, 4, '2024-02-04'),
+(5, 5, '2024-02-05'),
+(6, 6, '2024-02-06'),
+(7, 7, '2024-02-07'),
+(8, 8, '2024-02-08'),
+(9, 9, '2024-02-09'),
+(10, 10, '2024-02-10');
+GO
+
+INSERT INTO PurchaseCommodity (PurchaseID, CommodityID, Quantity)
+VALUES 
+(1, 1, 2),
+(1, 2, 1),
+(2, 3, 3),
+(3, 4, 1),
+(4, 5, 4),
+(5, 6, 1),
+(6, 7, 1),
+(7, 8, 2),
+(8, 9, 1),
+(9, 10, 3),
+(10, 1, 1),
+(10, 2, 2);
+GO
+
+INSERT INTO Delivery (VendorID, DeliveryDate)
+VALUES 
+(1, '2024-01-01'),
+(2, '2024-01-02'),
+(3, '2024-01-03'),
+(4, '2024-01-04'),
+(5, '2024-01-05'),
+(1, '2024-01-06'),
+(2, '2024-01-07'),
+(3, '2024-01-08'),
+(4, '2024-01-09'),
+(5, '2024-01-10');
+GO
+
+INSERT INTO DeliveryCommodity (DeliveryID, CommodityID, Quantity)
+VALUES 
+(1, 1, 100),
+(1, 2, 50),
+(2, 3, 200),
+(3, 4, 150),
+(4, 5, 120),
+(5, 6, 180),
+(6, 7, 75),
+(7, 8, 50),
+(8, 9, 90),
+(9, 10, 110),
+(10, 1, 60);
+GO
+
+--IV
+--1.1
+SELECT COUNT(*) AS NumberOfItems
+FROM Commodity
+WHERE Brand = 'Nike';
+
+--1.2
+SELECT COUNT(*) AS NumberOfSuppliers
+FROM Vendor
+WHERE City = 'Sofia';
+
+--1.3
+SELECT TOP 1 c.Brand, SUM(pc.Quantity) AS TotalQuantitySold
+FROM Commodity c
+JOIN PurchaseCommodity pc ON c.CommodityID = pc.CommodityID
+JOIN Purchase p ON pc.PurchaseID = p.PurchaseID
+WHERE c.Category = 'Sports'
+  AND p.PurchaseDate BETWEEN '2024-02-01' AND '2024-02-10' 
+GROUP BY c.Brand
+ORDER BY TotalQuantitySold DESC;
+
+--1.4
+SELECT TOP 1 pu.PurchaserID, CONCAT(p.FirstName, ' ', p.LastName) AS PurchaserName, 
+       SUM(c.PriceBGN * pc.Quantity) AS TotalPurchaseAmount
+FROM PurchaseCommodity pc
+JOIN Purchase pu ON pc.PurchaseID = pu.PurchaseID
+JOIN Purchaser p ON pu.PurchaserID = p.PurchaserID
+JOIN Commodity c ON pc.CommodityID = c.CommodityID
+WHERE pu.PurchaseDate BETWEEN '2024-02-01' AND '2024-02-10'
+GROUP BY pu.PurchaserID, p.FirstName, p.LastName
+ORDER BY TotalPurchaseAmount DESC;
+
+--1.5
+SELECT d.DeliveryID, d.DeliveryDate, v.Name AS VendorName, v.City AS VendorCity
+FROM Delivery d
+INNER JOIN Vendor v ON d.VendorID = v.VendorID;
